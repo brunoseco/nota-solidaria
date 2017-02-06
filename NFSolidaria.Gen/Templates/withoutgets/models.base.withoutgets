@@ -1,0 +1,42 @@
+﻿using System;
+using System.Linq;
+using Common.Domain;
+using Common.Domain.Interfaces;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using <#namespaceDomainSource#>.Filters;
+using Common.Models;
+
+namespace <#namespace#>.Domain
+{
+	public abstract class <#className#>Base : ConfigDomain<#module#>, IDisposable
+	{
+        internal IRepository<<#className#>> rep;
+		private ICache cache;
+		public ValidationHelper ValidationHelper = new ValidationHelper();
+
+		public <#className#>() { }
+
+        public <#className#>Base(IRepository<<#className#>> rep, ICache cache):base()
+        {
+            this.rep = rep;
+            this.cache = cache;
+			<#toolName#>
+			this.Init();
+			base.Config(this.cache);
+        }
+	
+<#property#>
+  
+		public virtual void Warnings(<#className#>Filter filters)
+        {
+            ValidationHelper.AddDomainWarning<<#className#>>("");
+        }
+
+		protected bool Confirm(<#className#> model, <#className#> modelOld)
+        {
+            return true;
+        }
+
+	}
+}

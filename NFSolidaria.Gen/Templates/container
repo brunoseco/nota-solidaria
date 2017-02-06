@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Domain.Interfaces;
+using Common.Infrastructure.Log;
+using SimpleInjector;
+using Common.Infrastructure.Cache;
+using Common.Infrastructure.ORM.Context;
+using Common.Infrastructure.ORM.Repositories;
+using <#namespaceDomainSource#>.Infrastructure.ORM.Contexto;
+using SimpleInjector.Integration.Web;
+
+public static partial class ConfigContainer
+{
+
+    private static Container container = new Container();
+
+    static ConfigContainer()
+    {
+		container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
+		container.Register<ILog, LogFileComponent>(Lifestyle.Scoped);
+		container.Register<IUnitOfWork<DbContext<#domainSource#>>, DbContext<#domainSource#>>(Lifestyle.Scoped);
+		container.Register<ICache, FactoryCache>(Lifestyle.Singleton);
+
+<#injections#>
+
+		RegisterOtherComponents(container);
+
+        container.Verify();
+
+    }
+
+    public static Container Container()
+    {
+        return container;
+    }
+
+}
+

@@ -1,0 +1,290 @@
+﻿using System;
+using System.Linq;
+using Common.Domain;
+using Common.Domain.Interfaces;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using <#namespaceDomainSource#>.Filters;
+using Common.Models;
+using System.Threading.Tasks;
+
+namespace <#namespace#>.Domain
+{
+	public abstract class <#className#>Base : ConfigDomain<#module#>, <#IAudit#> IDisposable
+	{
+        internal IRepository<<#className#>> rep;
+		protected ICache cache;
+		public ValidationHelper ValidationHelper = new ValidationHelper();
+
+		public <#className#>Base() { }
+        public <#className#>Base(IRepository<<#className#>> rep, ICache cache):base()
+        {
+            this.rep = rep;
+            this.cache = cache;
+			this.Init();
+			base.Config(this.cache);
+        }
+
+<#property#>
+
+        protected virtual void ValidationReletedClasses(<#className#> model, CurrentUser user, <#className#> modelOld) { }
+        protected virtual void SetInitialValues(<#className#> model) { }
+        protected virtual void DeleteCollectionsOnSave(<#className#> model) { }
+
+		public virtual <#className#> Get(<#className#> model)
+        {
+            return this.rep.GetAllAsNoTracking(this.DataAgregation(new <#className#>Filter
+            { 
+                QueryOptimizerBehavior = model.QueryOptimizerBehavior
+            }))<#WhereSingle#>.SingleOrDefault();
+        }
+
+        public virtual IQueryable<<#className#>> GetByFilters(<#className#>Filter filters, params Expression<Func<<#className#>, object>>[] includes)
+        {
+            var queryBase = this.rep.GetAllAsNoTracking(this.DataAgregation(includes, filters));
+            var queryFilter = queryBase;
+            return this.SimpleFilters(filters, queryBase);
+        }
+
+        public virtual Summary GetSummary(IQueryable<<#className#>> result)
+        {
+            return new Summary
+            {
+                Total = result.Count()
+            };
+        }		
+
+		public virtual void Warnings(<#className#>Filter filters)
+        {
+            ValidationHelper.AddDomainWarning<<#className#>>("");
+        }
+
+		public virtual PaginateResult<dynamic> GetDataListCustomPaging(<#className#>Filter filters)
+        {
+			var result = this.GetDataListCustom(filters).AsQueryable();
+            if (filters.IsOrderByDomain)
+                return this.Paging(filters, result);
+
+            return this.Paging(filters, result, result.OrderByDynamic(filters));
+		}
+        
+        public virtual PaginateResult<<#className#>> GetByFiltersPaging(<#className#>Filter filters, params Expression<Func<<#className#>, object>>[] includes)
+        {
+            var result = GetByFilters(filters, includes);
+
+            if (filters.IsOrderByDynamic)
+                return this.Paging(filters, result, result.OrderByDynamic(filters));
+
+            if (filters.IsOrderByDomain)
+                return this.Paging(filters, result);
+
+            return this.Paging(filters, result, result.OrderByDescending(_ => _.<#KeyName#>));
+        }
+
+        public virtual <#className#> GetOne(<#className#> model)
+        {
+            return this.Get(model);
+        }
+		
+		public <#className#> GetFromContext(<#className#> model)
+        {
+			return this.rep.Get(<#KeyNames#>);
+        }
+
+		protected IQueryable<<#className#>> SimpleFilters(<#className#>Filter filters,IQueryable<<#className#>> queryBase)
+        {
+			var queryFilter = queryBase;
+
+<#filtersExpressions#>
+
+            return queryFilter;
+        }
+
+		public virtual IEnumerable<dynamic> GetDataListCustom(<#className#>Filter filters)
+        {
+            var result = this.GetByFilters(filters);
+
+            return result.Select(_ => new
+            {
+				CustomFieldOrder =_.<#KeyName#>,
+				<#KeyName#> = _.<#KeyName#>	
+            });
+        }
+		
+		public virtual dynamic GetDataCustom(<#className#>Filter filters)
+        {
+            var result = this.GetByFilters(filters);
+
+            return result.Select(_ => new
+            {
+				<#KeyName#> = _.<#KeyName#>	
+            }).SingleOrDefault();
+        }
+
+		public virtual Summary GetSummaryDataListCustom(IEnumerable<dynamic> result)
+        {
+            return new Summary
+            {
+                Total = result.Count()
+            };
+        }
+		
+		protected virtual <#className#> UpdateDefault(<#className#> model,<#className#> modelOld)
+		{
+			var alvo = this.GetFromContext(model);
+            model.TransferTo(alvo);
+            this.rep.Update(alvo, modelOld);
+			return model;
+		}
+
+		protected virtual bool Continue(<#className#> model, <#className#> modelOld)
+        {
+            return true;
+        }
+
+		protected <#className#> SaveDefault(<#className#> model, bool validation = true, bool questionToContinue = true)
+        {
+            var user = this.ValidateAuthSimple(this.token, this.cache);
+            var modelOld = this.Get(model);
+            var isNew = modelOld.IsNull();
+
+			if (questionToContinue)
+            {
+                if (Continue(model, modelOld) == false)
+                    return model;
+            }
+
+			this.SetInitialValues(model);
+			<#callAudit#>
+            ValidationHelper.Validate<<#className#>>(model);
+            this.ValidationReletedClasses(model, user, modelOld);
+            if (validation) ValidationHelper.ValidateAll();
+
+            this.DeleteCollectionsOnSave(model);
+
+            if (isNew)
+                this.rep.Add(model);
+            else
+				this.UpdateDefault(model, modelOld);
+           
+		    this.ClearCache();
+            return model;
+        }
+
+		public virtual <#className#> SavePartial(<#className#> model)
+        {
+  		    model = SaveDefault(model, false);
+			this.rep.Commit();
+			return model;
+        }
+		public virtual void DeleteFromRepository(<#className#> alvo)
+        {
+            this.rep.Delete(alvo);
+			this.ClearCache();
+        }
+
+		public virtual void ClearCache()
+        {
+			if (this.cache.IsNotNull())
+            {
+                var tag = this.cache.Get("<#className#>") as List<string>;
+				if (tag.IsNull()) return;
+                foreach (var item in tag)
+                {
+                    this.cache.Remove(item);    
+                }
+                this.cache.Remove("<#className#>");
+            }
+            
+        }
+		
+        protected PaginateResult<<#className#>> PagingAndDefineFields(<#className#>Filter filters, IQueryable<<#className#>> queryFilter)
+        {
+            var queryOptimize = this.DefineFieldsGetByFilters(queryFilter, filters.QueryOptimizerBehavior);
+			
+			if (!filters.IsOrderByDomain)
+                queryOptimize = queryOptimize.OrderByDynamic(filters);
+
+            var paginateResult = this.Paging(filters, queryOptimize);
+            var queryMapped = this.MapperGetByFiltersToDomainFields(queryFilter, paginateResult.ResultPaginatedData, filters.QueryOptimizerBehavior);
+
+            return new PaginateResult<<#className#>>
+            {
+                TotalCount = paginateResult.TotalCount,
+                ResultPaginatedData = queryMapped,
+                Source = queryFilter
+            };
+        }
+
+        protected <#className#> GetAndDefineFields(IQueryable<<#className#>> source, string queryOptimizerBehavior)
+        {
+            var queryOptimize = this.DefineFieldsGetOne(source, queryOptimizerBehavior);
+            var queryMapped = this.MapperGetOneToDomainFields(source, queryOptimize, queryOptimizerBehavior);
+            return queryMapped;
+        }
+
+        protected virtual dynamic DefineFieldsGetOne(IQueryable<<#className#>> source, string queryOptimizerBehavior)
+        {
+            if (queryOptimizerBehavior == "queryOptimizerBehavior")
+            {
+                return source.Select(_ => new
+                {
+
+                }).SingleOrDefault();
+            }
+            return source;
+        }
+
+        protected virtual IQueryable<dynamic> DefineFieldsGetByFilters(IQueryable<<#className#>> source, string queryOptimizerBehavior)
+        {
+            if (queryOptimizerBehavior == "queryOptimizerBehavior")
+            {
+                return source.Select(_ => new
+                {
+
+                });
+            }
+            return source;
+        }
+
+        protected virtual IQueryable<<#className#>> MapperGetByFiltersToDomainFields(IQueryable<<#className#>> source, IEnumerable<dynamic> result, string queryOptimizerBehavior)
+        {
+            if (queryOptimizerBehavior == "queryOptimizerBehavior")
+            {
+                return result.Select(_ => new <#className#>
+                {
+
+                }).AsQueryable();
+            }
+            
+			return result.Select(_=> (<#className#>)_).AsQueryable();
+
+        }
+
+        protected virtual <#className#> MapperGetOneToDomainFields(IQueryable<<#className#>> source, dynamic result, string queryOptimizerBehavior)
+        {
+            if (queryOptimizerBehavior == "queryOptimizerBehavior")
+            {
+                return new <#className#>
+                {
+
+                };
+            }
+            return source.SingleOrDefault();
+        }
+
+		protected virtual Expression<Func<<#className#>, object>>[] DataAgregation(Filter filter)
+        {
+            return DataAgregation(new Expression<Func<<#className#>, object>>[] { }, filter);
+        }
+
+        protected virtual Expression<Func<<#className#>, object>>[] DataAgregation(Expression<Func<<#className#>, object>>[] includes, Filter filter)
+        {
+            return includes;
+        }
+
+
+<#audit#>
+	
+	}
+}

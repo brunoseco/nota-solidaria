@@ -1,0 +1,115 @@
+﻿<ion-view view-title="Novo Cupom" cache-view="false">
+    <ion-content class="novo-cupom-nfs">
+
+        <div class="container">
+            <hr class="white" />
+
+            <div class="label">Carregue até duas imagem para ler</div>
+
+            <div class="row" ng-if="vm.IsPc" style="margin-top:15px;">
+                <div class="col col-100">
+                    <input type="file" ng-model="vm.ImagesFromPC"
+                           base-sixty-four-input value="Carregar Imagem"
+                           multiple accept="image/*" maxnum="2" />
+                </div>
+            </div>
+            <div class="row" ng-if="vm.IsPc">
+                <div class="col col-100">
+                    <button class="button button-block button-stable icon-right icon ion-refresh" ng-click="vm.LoadImagesFromPC()" ng-disabled="vm.ImagesFromPC.length == 0">
+                        Carregar imagem para memória
+                    </button>
+                </div>
+            </div>
+            <div class="row" ng-if="!vm.IsPc">
+                <div class="col col-50">
+                    <button class="button button-block button-positive" ng-click="vm.AbrirCamera()" ng-disabled="vm.Imagens.length == 2">
+                        <i class="icon ion-camera"></i>
+                        Câmera
+                    </button>
+                </div>
+                <div class="col col-50">
+                    <button class="button button-block button-balanced" ng-click="vm.ImportarImagem()" ng-disabled="vm.Imagens.length == 2">
+                        <i class="icon ion-image"></i>
+                        Galeria
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" ng-if="vm.Imagens.length > 0">
+                <div class="col col-100 image-space">
+                    <ul>
+                        <li ng-repeat="image in vm.Imagens">
+                            <button class="button button-assertive" ng-click="vm.RemoverImagem($index)">
+                                <i class="icon ion-close-circled"></i>
+                            </button>
+                            <img ng-src="data:image/jpeg;base64,{{ image }}" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col col-100">
+                    <button class="button button-block button-calm icon-right icon ion-ios-download-outline"
+                            ng-click="vm.LerImagens()" ng-disabled="vm.Imagens.length == 0">
+                        Carregar e preencher campos
+                    </button>
+                </div>
+            </div>
+
+            <form name="novoCupom">
+                <div class="list card form-cupom">
+                    <label class="item item-select">
+                        <span class="input-label">Entidade</span>
+                        <select ng-model="vm.Cupom.Entidade" ng-options="item.Name for item in vm.UsuarioEntidadeFavoritas track by item.Id" ng-required="true">
+                            <option value="">Selecione</option>
+                        </select>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">CNPJ</span>
+                        <input type="text" ng-model="vm.Cupom.CNPJEmissor" id="CNPJEmissor" class="text-right" ng-required="true" ui-br-cnpj-mask>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Data da compra</span>
+                        <input type="text" ng-model="vm.Cupom.DataCompra" id="DataCompra" class="text-right" ng-required="true" ui-date-mask>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">COO</span>
+                        <input type="text" ng-model="vm.Cupom.COO" class="text-right" ng-required="true" ui-mask="999999" ui-mask-placeholder>
+                    </label>
+                    <label class="item item-select">
+                        <span class="input-label">Tipo</span>
+                        <select ng-model="vm.Cupom.TipoNota" ng-required="true" ng-disabled="true">
+                            <option value="1" selected>Cupom fiscal</option>
+                            <option value="2">Nota fiscal</option>
+                        </select>
+                    </label>
+                    <label class="item item-input">
+                        <span class="input-label">Valor</span>
+                        <input type="text" ng-model="vm.Cupom.Valor" class="text-right" ng-required="true" ui-money-mask="2">
+                    </label>
+                </div>
+
+                <div class="row">
+                    <div class="col col-100">
+                        <button class="button button-block button-balanced icon-right icon ion-ios-checkmark-outline"
+                                ng-disabled="novoCupom.$invalid"
+                                ng-click="vm.SalvarNota(vm.Cupom)">
+                            <strong>Salvar</strong>
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+        </div>
+
+    </ion-content>
+</ion-view>

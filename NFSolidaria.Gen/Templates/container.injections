@@ -1,0 +1,1 @@
+﻿container.Register<IRepository<<#namespaceDomainSource#>.Domain.<#className#>>, Repository<<#namespaceDomainSource#>.Domain.<#className#>, DbContext<#domainSource#>>>(Lifestyle.Scoped);

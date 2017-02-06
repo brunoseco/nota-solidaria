@@ -1,0 +1,54 @@
+﻿@model IEnumerable<ProjetoRankingNFE.Models.Entidade>
+@{
+    ViewBag.Title = "Ranking";
+}
+
+<div class="container text-center">
+    <h2>Ranking de doações por mês</h2>
+    <div class="editor-field">
+        @Html.DropDownList("Periodo", new List<SelectListItem>{
+        new SelectListItem{ Text="Janeiro", Value="1"},
+        new SelectListItem{ Text="Fevereiro", Value="2"},
+        new SelectListItem{ Text="Março", Value="3"},
+        new SelectListItem{ Text="Abril", Value="4"},
+        new SelectListItem {Text = "Maio", Value="5" },
+        new SelectListItem { Text="Junho", Value="6" , Selected = true }
+        }, "--- Escolha o período ---",
+        htmlAttributes: new { @class = "form-control" })
+    </div>
+
+    <br />
+    <br />
+
+
+    <div id="chartUpload"></div>
+
+</div>
+
+<hr />
+
+<br />
+
+<div class="container text-center">
+    <h2>Ranking de doações por ano</h2>
+    <div class="row">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Entidade</th>
+                    <th>Cupons cadastrados</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => item.Usuario.Nome)</td>
+                    <td>@Html.DisplayFor(m => item.QuantidadeNotas)</td>
+                    <td>@Html.DisplayFor(m => item.ValorTotal)</td>
+                </tr>
+            }
+        </table>
+
+    </div>
+</div>

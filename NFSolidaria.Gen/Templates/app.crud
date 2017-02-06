@@ -1,0 +1,222 @@
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Domain.Interfaces;
+using Common.Infrastructure.Cache;
+using System.Collections.Generic;
+using Common.Models;
+using <#namespaceDomainSource#>.Filters;
+using Common.Interfaces;
+using <#namespace#>.Dto;
+using <#namespaceDomainSource#>.Domain;
+using Common.Domain;
+using System.Transactions;
+using Common.Infrastructure.Log;
+
+namespace <#namespace#>.Application
+{
+    public partial class <#className#>App : IDisposable
+    {
+        private IRepository<<#className#>> rep<#className#>;
+        private ICache cache;
+        private <#className#> <#className#>;
+		public ValidationHelper ValidationHelper;
+
+        public <#className#>App(string token)
+        {
+			this.Init(token);
+			this.ValidationHelper = <#className#>.ValidationHelper;
+        }
+			
+
+		public SearchResult<<#className#>Dto> GetByFilters(<#className#>Filter filter)
+        {
+			var result = default(SearchResult<<#className#>Dto>);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				result = GetByFiltersWithCache(filter, MapperDomainToResult);
+			}
+			return result;
+        }
+				
+		public SearchResult<dynamic> GetDataListCustom(<#className#>Filter filters)
+        {
+			var result = default(SearchResult<dynamic>);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				var pagingResult = this.<#className#>.GetDataListCustomPaging(filters);
+                result = new SearchResult<dynamic>
+                {
+                    DataList = pagingResult.ResultPaginatedData.ToList(),
+                    Summary = this.<#className#>.GetSummaryDataListCustom(pagingResult.Source)
+                };
+			}
+			return result;
+        }
+		
+		public dynamic GetDataCustom(<#className#>Filter filters)
+        {
+			var result = default(dynamic);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				result = this.<#className#>.GetDataCustom(filters);
+			}
+			return result;
+        }
+
+		public <#className#>Dto Get(<#className#>Dto dto)
+        {
+			var result = default(<#className#>Dto);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				var model =  AutoMapper.Mapper.Map<<#className#>Dto, <#className#>>(dto);
+				var data = this.<#className#>.GetOne(model);
+				result =  this.MapperDomainToDtoSpecialized(data);
+			}
+			return result;
+        }
+		
+		public IEnumerable<DataItem> GetDataItem(<#className#>Filter filters)
+		{
+			var result = default(IEnumerable<DataItem>);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				var filterKey = filters.CompositeKey(); 
+
+				if (filters.ByCache)
+				{
+					if (this.cache.ExistsKey(filterKey))
+					{
+						var resultCache = (IEnumerable<DataItemCache>)this.cache.Get(filterKey);
+						return resultCache.Select(_ => new DataItem
+						{
+							Id = _.Id,
+							Name = _.Name
+						});
+					}
+				}
+
+				result = this.<#className#>.GetDataItem(filters);
+				if (filters.ByCache)
+				{
+					if (!result.IsAny()) return result;
+					this.cache.Add(filterKey, result.Select(_ => new DataItemCache
+					{
+						Id = _.Id,
+						Name = _.Name
+					}).ToList());
+					this.AddTagCache(filterKey);
+					FactoryLog.GetInstace().Debug(string.Format("DataItem: {0} - Key: {1} - CacheExpiresTime:{2}", filters.CacheGroup, filterKey, filters.CacheExpiresTime));
+				}
+			}
+			return result;
+		}
+
+		public int GetTotalByFilters(<#className#>Filter filter)
+        {
+			var result = default(int);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadUncommitted }))
+            {
+				result = this.<#className#>.GetByFilters(filter).Count();
+			}
+			return result;
+        }
+		
+		public <#className#>Dto Save(<#className#>DtoSpecialized dto)
+        {
+			var result = default(<#className#>Dto);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+				var model =  AutoMapper.Mapper.Map<<#className#>DtoSpecialized, <#className#>>(dto);
+				var data = this.<#className#>.Save(model);
+				result =  this.MapperDomainToDtoOnSave(data, dto);
+				transaction.Complete();
+			}
+			return result;
+        }
+
+		public <#className#>Dto SavePartial(<#className#>DtoSpecialized dto)
+        {
+			var result = default(<#className#>Dto);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))            
+			{
+				var model =  AutoMapper.Mapper.Map<<#className#>DtoSpecialized, <#className#>>(dto);
+				var data = this.<#className#>.SavePartial(model);
+				result =  this.MapperDomainToDtoOnSave(data, dto);
+				transaction.Complete();
+			}
+			return result;
+        }
+
+		public IEnumerable<<#className#>Dto> Save(IEnumerable<<#className#>DtoSpecialized> dtos)
+        {
+			var result = default(IEnumerable<<#className#>Dto>);
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+				var models = AutoMapper.Mapper.Map<IEnumerable<<#className#>DtoSpecialized>, IEnumerable<<#className#>>>(dtos);
+				var data = this.<#className#>.Save(models);
+				result =  this.MapperDomainToDtoOnSave(data, dtos);
+				transaction.Complete();
+			}
+			return result;
+        }
+
+		public void Delete(<#className#>Dto dto)
+        {
+			using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            {
+				var model =  AutoMapper.Mapper.Map<<#className#>Dto, <#className#>>(dto);
+				this.<#className#>.Delete(model);
+				transaction.Complete();
+			}
+        }
+				
+		private Common.Models.Summary Summary(IQueryable<<#className#>> queryBase, PaginateResult<<#className#>> dataList)
+        {
+			return this.<#className#>.GetSummary(queryBase);
+        }
+
+		private SearchResult<<#className#>Dto> GetByFiltersWithCache(<#className#>Filter filter, Func<<#className#>Filter, PaginateResult<<#className#>>, IEnumerable<<#className#>Dto>> MapperDomainToDto)
+        {
+            var filterKey = filter.CompositeKey();
+            if (filter.ByCache)
+                if (this.cache.ExistsKey(filterKey))
+                    return (SearchResult<<#className#>Dto>)this.cache.Get(filterKey);
+
+            var paginateResultOptimize = this.<#className#>.GetByFiltersPaging(filter);
+            var result = MapperDomainToDto(filter, paginateResultOptimize);
+			this.<#className#>.SummaryBehavior = filter.SummaryBehavior;
+            this.<#className#>.TotalCount = paginateResultOptimize.TotalCount;
+            var summary = this.Summary(paginateResultOptimize.Source, paginateResultOptimize);
+
+            var searchResult = new SearchResult<<#className#>Dto>
+            {
+                DataList = result,
+                Summary = summary,
+            };
+
+            if (filter.ByCache)
+			{
+				if (!searchResult.DataList.IsAny()) return searchResult;
+                this.cache.Add(filterKey, searchResult);
+				this.AddTagCache(filterKey);
+			}
+
+            return searchResult;
+        }
+		
+        private void AddTagCache(string filterKey)
+        {
+            var tags = this.cache.Get("<#className#>") as List<string>;
+            if (tags.IsNull()) tags = new List<string>();
+            tags.Add(filterKey);
+            this.cache.Add("<#className#>", tags);
+        }
+		
+        public void Dispose()
+        {
+            this.<#className#>.Dispose();
+        }
+    }
+}

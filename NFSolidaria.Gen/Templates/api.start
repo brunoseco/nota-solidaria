@@ -1,0 +1,93 @@
+﻿using <#namespace#>.Application.Config;
+using Common.API;
+using Newtonsoft.Json;
+using System.Web.Http;
+using System.Web.Http.Cors;
+
+namespace <#namespace#>.Api
+{
+    public static class WebApiConfig
+    {
+        public static void Register(HttpConfiguration config)
+        {
+			// Init
+
+			EnabledPreCompiledViews();
+			EnabledRegisterMappings();
+
+            // Web API configuration and services
+
+            EnableCors(config);
+            EnableReferenceLoop(config);
+            EnableCompress(config);
+
+            // Web API routes
+
+            config.MapHttpAttributeRoutes();
+			          
+            config.Routes.MapHttpRoute(
+                name: "PostMany",
+                routeTemplate: "api/{controller}/PostMany",
+                defaults: new { id = RouteParameter.Optional, action = "PostMany" }
+            );
+			
+            config.Routes.MapHttpRoute(
+                name: "GetTotalByFilters",
+                routeTemplate: "api/{controller}/GetTotalByFilters",
+                defaults: new { id = RouteParameter.Optional, action = "GetTotalByFilters" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "GetDataListCustom",
+                routeTemplate: "api/{controller}/GetDataListCustom",
+                defaults: new { id = RouteParameter.Optional, action = "GetDataListCustom" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "GetDataCustom",
+                routeTemplate: "api/{controller}/GetDataCustom",
+                defaults: new { id = RouteParameter.Optional, action = "GetDataCustom" }
+            );
+
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}/{action}",
+                defaults: new { id = RouteParameter.Optional, action = "DefaultAction" }
+            );
+        }
+		
+		private static void EnabledRegisterMappings()
+        {
+            AutoMapperConfig<#module#>.RegisterMappings();
+        }
+
+		private static void EnabledPreCompiledViews()
+        {
+            MappingViewCache<#domainSource#>Genereted.LoadPreCompiledViews();
+        }
+
+        private static void EnableCompress(HttpConfiguration config)
+        {
+            config.MessageHandlers.Add(new EncodingDelegateHandler());
+        }
+
+        private static void EnableReferenceLoop(HttpConfiguration config)
+        {
+            config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+        }
+
+        private static void EnableCors(HttpConfiguration config)
+        {
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
+        }
+
+        private static void EnableResponseLog(HttpConfiguration config)
+        {
+            config.MessageHandlers.Add(new LogRequestAndResponseHandler());
+        }
+    }
+}

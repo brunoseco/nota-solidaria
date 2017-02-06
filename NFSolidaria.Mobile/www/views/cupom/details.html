@@ -1,0 +1,26 @@
+﻿<ion-modal-view class="modal-nfs">
+    <ion-header-bar>
+        <h1 class="title">DETALHE</h1>
+        <button class="button icon-left ion-close-circled button-assertive" ng-click="vm.modalDetailsCupom.hide()"></button>
+    </ion-header-bar>
+    <ion-content class="scroll-content ionic-scroll has-tabs conteudoMensagem" style="bottom:65px;">
+
+        <div class="msg-padrao item item-text-wrap">
+            <h3 class="text-center">DETALHES DO CUPOM FISCAL</h3>
+            <p><b>Data da Compra:</b> {{ vm.Cupom.DataCompra | date:'dd/MM/yyyy' }}</p>
+            <p><b>CNPJ:</b> {{ vm.Cupom.CNPJEmissor }}</p>
+            <p><b>Entidade:</b> {{ vm.Cupom.Entidade.Usuario.Nome }}</p>
+            <p><b>Data de Lançamento:</b> {{ vm.Cupom.DataLancamento | date:"dd/MM/yyyy 'às' H:mm" }}</p>
+            
+            <p><b>Valor:</b> {{ vm.Cupom.Valor | currency }}</p>
+            <p><b>Situação:</b> {{ vm.Cupom.Situacao == 1 ? "Pendente" : vm.Cupom.Situacao == 2 ? "Processado" : "Ocorreu um erro ao processar, revise as informações" }}</p>
+            <p ng-if="vm.Cupom.DataProcessamento"><b>Data do Processamento:</b> {{ vm.Cupom.DataProcessamento | date:"dd/MM/yyyy 'às' H:mm" }}</p>
+        </div>
+
+    </ion-content>
+    <ion-footer-bar>
+        <button class="button button-block button-assertive" ng-click="vm.CancelarCupom(vm.Cupom.CupomId)" ng-disabled="vm.Cupom.Situacao != 1">
+            Cancelar lançamento do cupom
+        </button>
+    </ion-footer-bar>
+</ion-modal-view>

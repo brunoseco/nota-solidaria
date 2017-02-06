@@ -1,0 +1,37 @@
+<ion-view view-title="Login">
+    <ion-content class="login-nfs">
+        <div class="container">
+            <div class="align">
+                <div class="logo-nfs">
+                    <img ng-src="images/logo-azul.png" />
+                </div>
+                <div class="list list-inset">
+                    <h5>Faça o login:</h5>
+                    <form name="frmSignIn" class="form-login">
+                        <label class="item item-input">
+                            <i class="icon ion-email"></i>
+                            <input type="text" placeholder="Email" ng-model="vm.SignInModel.Email" ng-required="true" autocomplete="off">
+                        </label>
+                        <label class="item item-input">
+                            <i class="icon ion-locked"></i>
+                            <input type="password" placeholder="Senha" ng-model="vm.SignInModel.SenhaMD5" ng-required="true" autocomplete="off">
+                        </label>
+                        <button class="button button-block button-balanced btn-login"
+                                ng-click="vm.SignIn(vm.SignInModel)"
+                                ng-disabled="frmSignIn.$invalid">
+                            Entrar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+    <div class="bar bar-footer bar-login no-bgColor">
+        <button class="button button-clear btn-active">
+            <i class="icon ion-locked"></i> Login
+        </button>
+        <button class="button button-clear" ng-click="vm.openModalSignUp()">
+            <i class="icon ion-plus-circled"></i> Cadastrar
+        </button>
+    </div>
+</ion-view>

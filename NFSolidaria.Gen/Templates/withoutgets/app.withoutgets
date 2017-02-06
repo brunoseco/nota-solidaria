@@ -1,0 +1,42 @@
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Domain.Interfaces;
+using Common.Infrastructure.Cache;
+using System.Collections.Generic;
+using Common.Models;
+using <#namespaceDomainSource#>.Filters;
+using Common.Interfaces;
+using <#namespace#>.Dto;
+using <#namespaceDomainSource#>.Domain;
+using Common.Domain;
+using System.Transactions;
+using Common.Infrastructure.Log;
+
+namespace <#namespace#>.Application
+{
+    public partial class <#className#>App : IDisposable
+    {
+        private IRepository<<#className#>> rep<#className#>;
+        private ICache cache;
+        private <#className#> <#className#>;
+		public ValidationHelper ValidationHelper;
+
+        public <#className#>App(string token)
+        {
+			this.Init(token);
+			this.ValidationHelper = <#className#>.ValidationHelper;
+        }
+
+		public void GetWarnings(<#className#>Filter filters)
+        {
+            this.<#className#>.Warnings(filters);
+        }
+
+        public void Dispose()
+        {
+            this.<#className#>.Dispose();
+        }
+    }
+}

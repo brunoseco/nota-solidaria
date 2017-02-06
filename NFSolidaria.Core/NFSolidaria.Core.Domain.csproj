@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6346EF8F-C035-41F0-9DC8-1E860FEABD2E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NFSolidaria.Core.Domain</RootNamespace>
+    <AssemblyName>NFSolidaria.Core.Domain</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base\ConfigDomainCore.cs" />
+    <Compile Include="Custom\UsuarioCache.cs" />
+    <Compile Include="Models\Cadastrador\Cadastrador.cs" />
+    <Compile Include="Models\Cadastrador\Cadastrador.ext.cs" />
+    <Compile Include="Models\Cadastrador\Cadastrador.Validation.cs" />
+    <Compile Include="Models\Cadastrador\Cadastrador.Validation.ext.cs" />
+    <Compile Include="Models\Cadastrador\CadastradorCustom.ext.cs" />
+    <Compile Include="Models\Cupom\Cupom.cs" />
+    <Compile Include="Models\Cupom\Cupom.ext.cs" />
+    <Compile Include="Models\Cupom\Cupom.Validation.cs" />
+    <Compile Include="Models\Cupom\Cupom.Validation.ext.cs" />
+    <Compile Include="Models\Cupom\CupomCustom.ext.cs" />
+    <Compile Include="Models\EntidadeCadastrador\EntidadeCadastrador.cs" />
+    <Compile Include="Models\EntidadeCadastrador\EntidadeCadastrador.ext.cs" />
+    <Compile Include="Models\EntidadeCadastrador\EntidadeCadastrador.Validation.cs" />
+    <Compile Include="Models\EntidadeCadastrador\EntidadeCadastrador.Validation.ext.cs" />
+    <Compile Include="Models\EntidadeCadastrador\EntidadeCadastradorCustom.ext.cs" />
+    <Compile Include="Models\Entidade\Entidade.cs" />
+    <Compile Include="Models\Entidade\Entidade.ext.cs" />
+    <Compile Include="Models\Entidade\Entidade.Validation.cs" />
+    <Compile Include="Models\Entidade\Entidade.Validation.ext.cs" />
+    <Compile Include="Models\Entidade\EntidadeCustom.ext.cs" />
+    <Compile Include="Models\UsuarioEntidadeFavorita\UsuarioEntidadeFavorita.cs" />
+    <Compile Include="Models\UsuarioEntidadeFavorita\UsuarioEntidadeFavorita.ext.cs" />
+    <Compile Include="Models\UsuarioEntidadeFavorita\UsuarioEntidadeFavorita.Validation.cs" />
+    <Compile Include="Models\UsuarioEntidadeFavorita\UsuarioEntidadeFavorita.Validation.ext.cs" />
+    <Compile Include="Models\UsuarioEntidadeFavorita\UsuarioEntidadeFavoritaCustom.ext.cs" />
+    <Compile Include="Models\Usuario\Usuario.cs" />
+    <Compile Include="Models\Usuario\Usuario.ext.cs" />
+    <Compile Include="Models\Usuario\Usuario.Validation.cs" />
+    <Compile Include="Models\Usuario\Usuario.Validation.ext.cs" />
+    <Compile Include="Models\Usuario\UsuarioCustom.ext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NFSolidaria.Common\Common.API\Common.API.csproj">
+      <Project>{b5dab1b9-fc31-4c57-ba89-4213e293fcea}</Project>
+      <Name>Common.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NFSolidaria.Common\Common.Domain\Common.Domain.csproj">
+      <Project>{af134bf9-6c09-4822-bbeb-a2eff5b1878d}</Project>
+      <Name>Common.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NFSolidaria.Common\Common\Common.csproj">
+      <Project>{e5811b43-3b9b-4d54-b7c8-d664ae0e0216}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NFSolidaria.Enum\NFSolidaria.Enum.csproj">
+      <Project>{93dc1632-82a3-4d4f-8007-54dacc28462b}</Project>
+      <Name>NFSolidaria.Enum</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NFSolidaria.Filters\NFSolidaria.Filters.csproj">
+      <Project>{3dd0a3fd-ac38-4c7d-820f-7e6a9fb8a649}</Project>
+      <Name>NFSolidaria.Filters</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

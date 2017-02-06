@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<div class="header">
+    <div class="container">
+        <h1 class="text-primary text-center">Nota Solidária</h1>
+        <p style="font-size:18px;">
+            <br />
+            Nossa equipe busca construir uma forma de facilitar a doação de <strong>cupons</strong> fiscais.
+            Visando assim incentivar a doação para entidades de caridade, orgãos beneficentes etc. Basta cadastrar sua empresa em nossa site,
+            e quando alguem quiser doar para sua empresa, basta baixar o app gratuito que fará todo envio através de um programa totalmente seguro
+            que não compromete seus dados e sua privacidade, e sem a necessidade de
+            ficar preenchendo manualmente os dados na hora de enviar o cupom.<br />
+            <span class="text-danger">
+                Se você é um paulistano, siga os passos abaixos para saber como começar a doar.
+            </span><br />
+            <span class="text-success">
+                Se você é uma entidade beneficente no Estado de São Paulo,
+                clique <a href="@Url.Action("Contato","Home")">aqui</a> para entrar em contato conosco e ter seus dados
+                disponíveis na aplicação para receber doações.
+            </span>
+
+        </p>
+        <hr style="width:50%" />
+        <div class="text-center">
+            <h3>Faça o download do app e começe já</h3><br />
+            <p>
+                <a href="#" class="btn btn-primary btn-lg">
+                    <i class="fa fa-apple fa-2x"></i>
+                </a>
+
+                <a href="#" class="btn btn-default btn-lg">
+                    <i class="fa fa-android fa-2x"></i>
+                </a>
+
+                <a href="#" class="btn btn-danger btn-lg">
+                    <i class="fa fa-windows fa-2x"></i>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<hr class="star-primary" />
+
+<section id="step-to-step">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Para começar é muito simples</h2><br />
+            </div>
+        </div>
+        <hr class="hr-divider" />
+        <div class="row font-step">
+            <div class="col-md-12">
+                <img src="~/Img/passo_1.png" class="img-circle" />
+                <p>
+                    <br />
+                    Basta baixar o aplicativo Nota Solidária <br />
+                    disponivel para iOS, Android e Windows Phone
+                </p>
+            </div>
+        </div>
+        <hr class="hr-divider-red" />
+        <div class="row font-step">
+            <div class="col-md-12">
+                <img src="~/Img/passo_2.png" class="img-circle" />
+                <p>
+                    <br />
+                    Tirar uma foto do cupom fiscal ou digita-lo com seu smartphone
+                </p>
+            </div>
+        </div>
+        <hr class="hr-divider-red" />
+        <div class="row font-step">
+            <div class="col-md-12">
+                <img src="~/Img/passo_3.png" class="img-circle" />
+                <p>
+                    <br />
+                    Clicar em enviar e pronto, sua doação será enviada em questão de minutos
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <h2>A doação é rápida, simples e sigilosa.</h2>
+        </div>
+    </div>
+</section>
+
+<hr class="hr-divider" />
+
+<section id="about-us">
+    <div class="container">
+        <h2 class="text-center" style="color:dodgerblue">O que falam sobre a gente</h2>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Marcelo</a></li>
+            <li><a style="color:dodgerblue" data-toggle="tab" href="#menu1">João</a></li>
+            <li><a style="color:dodgerblue" data-toggle="tab" href="#menu2">Jaqueline</a></li>
+        </ul>
+        <div class="tab-content" style="text-align:center;">
+            <div id="home" class="tab-pane fade in active">
+                <h2>Marcelo Azevedo, Voluntário da Proex</h2>
+                <p>Uma iniciativa incrível, sem fins lucrativos que visa apenas facilitar e ajudar o nosso trabalho.</p>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <h2>João Guilherme, Presidente Entidade Amigos dos Autistas</h2>
+                <p>Uma inovação técnologica, e nos trouxe muito mais doações.</p>
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <h2>Jaqueline Mendes, Gerente do Supermercado Boa Vista</h2>
+                <p>Agora ficou muito mais rapído e prático para efetuar as doações.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<br />
+
+<hr class="star-primary" />
+<br />

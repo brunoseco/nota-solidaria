@@ -1,0 +1,1 @@
+﻿public virtual ICollection<<#className#>> <#classNameNav#>s { get; set;} 

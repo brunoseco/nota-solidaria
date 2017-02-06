@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Configuration;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Infrastructure.ORM.Context;
+using Common.Infrastructure.Log;
+using <#namespace#>.Infrastructure.ORM.Maps;
+using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.Entity.Infrastructure.MappingViews;
+using <#namespace#>.Infrastructure.ORM.Contexto;
+using Common.Domain.Interfaces;
+
+
+namespace <#namespace#>.Infrastructure.ORM.Contexto
+{
+    public class DbContext<#module#> : DbContext, IUnitOfWork<DbContext<#module#>>,IUnitOfWork
+    {
+        static DbContext<#module#>()
+        {
+            Database.SetInitializer<DbContext<#module#>>(null);
+        }
+
+        public DbContext<#module#>(ILog log)
+            : base(ConfigurationManager.ConnectionStrings["<#module#>"].ConnectionString)
+        {
+			base.Database.Log = log.Info;
+        }
+		
+		public string ConnectionStringComplete()
+        {
+            return ConfigurationManager.ConnectionStrings["<#module#>"].ConnectionString;
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+<#mappers#>
+
+        }
+
+
+        public void Commit()
+        {
+            base.SaveChanges();
+        }
+    }
+}

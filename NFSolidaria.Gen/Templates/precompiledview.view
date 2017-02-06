@@ -1,0 +1,4 @@
+﻿private static DbMappingView <#viewNameMethod#>() 
+{ 
+	return new DbMappingView(@"<#viewSql#>"); 
+}

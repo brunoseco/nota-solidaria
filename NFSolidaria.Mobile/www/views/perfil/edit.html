@@ -1,0 +1,42 @@
+﻿<ion-modal-view class="modal-nfs">
+    <ion-header-bar>
+        <h1 class="title">Editar Perfil</h1>
+        <button class="button button-clear button-primary icon-left ion-close-circled" ng-click="vm.modalEditPerfil.hide()"></button>
+    </ion-header-bar>
+    <form name="frmEditPerfil">
+        <ion-content class="scroll-content ionic-scroll">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Nome</span>
+                <input type="text" placeholder="Nome" name="SignUpModel.Nome" ng-model="vm.Usuario.Nome" ng-required="true" ng-minlength="3" />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">E-mail</span>
+                <input type="email" placeholder="E-mail" name="SignUpModel.Email" ng-model="vm.Usuario.Email" ng-required="true" ng-minlength="3" />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">CPF</span>
+                <input type="text" placeholder="CPF" name="SignUpModel.CPF_CNPJ" ng-model="vm.Usuario.CPF_CNPJ" ui-br-cpf-mask />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Data de Nascimento</span>
+                <input type="text" name="SignUpModel.DataNascimento" ng-model="vm.Usuario.DataNascimento" ui-date-mask />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Cidade</span>
+                <input type="text" name="SignUpModel.Cidade" placeholder="Cidade" ng-model="vm.Usuario.Cidade" />
+            </label>
+
+        </ion-content>
+
+        <ion-footer-bar>
+            <button class="button button-block button-balanced" ng-click="vm.SavePerfil(vm.Usuario)" ng-disabled="frmEditPerfil.$invalid">
+                Salvar
+            </button>
+        </ion-footer-bar>
+
+    </form>
+</ion-modal-view>

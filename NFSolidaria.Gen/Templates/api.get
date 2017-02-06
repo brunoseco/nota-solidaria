@@ -1,0 +1,24 @@
+﻿		[ActionName("DefaultAction")]
+		public HttpResponseMessage Get(<#KeyType#> id)
+		{
+			var result = new HttpResult<<#className#>Dto>();
+
+			try
+			{
+				var token = HelperAuth.GetHeaderToken();
+				this.app = new <#className#>App(token);
+				var data = this.app.Get(new <#className#>Dto { <#KeyName#> = id});
+				this.app.Dispose();
+				result.Success(data);
+				return Request.CreateResponse(result.StatusCode, result);
+
+			}
+			catch (Exception ex)
+			{
+                result.ReturnCustomException(ex);
+				return Request.CreateResponse(result.StatusCode, result);
+
+			}
+
+		}
+

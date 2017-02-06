@@ -1,0 +1,67 @@
+﻿
+<ion-view view-title="Notas" cache-view="false">
+    <ion-content class="geral-nfs">
+
+        <ion-refresher on-refresh="vm.carregarCuponsNovos()" pulling-text="Atualizar" spinner="none"
+                       refreshing-icon="ion-load-c" pulling-icon="ion-load-c"
+                       class="ion-refreshing">
+        </ion-refresher>
+
+        <div class="container">
+            <div class="bar bar-user item-input-inset">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-ios-search placeholder-icon"></i>
+                    <input type="search" placeholder="Pesquisar por Entidade ou COO" ng-model="vm.NomePesquisa" ng-change="vm.carregarCuponsNovos()" />
+                </label>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="conteudo list-nfs">
+                <div class="item item-text-wrap" style="border:0;">
+                    <div class="list" ng-if="vm.Cupons.length == 0">
+                        <a class="item text-center">
+                            <h2>Nenhum cupom lançado ainda</h2>
+                        </a>
+                    </div>
+                    <div class="list" ng-if="vm.Cupons.length > 0">
+                        <a class="item item-icon-left" ng-click="vm.AbrirCupom(item.CupomId)" ng-repeat="item in vm.Cupons track by $index">
+                            <i class="icon ion-ios-paper-outline" ng-if="item.TipoNota == 1"></i>
+                            <i class="icon ion-ios-list-outline" ng-if="item.TipoNota == 2"></i>
+
+                            <div class="icon-desc">
+                                <span>
+                                    {{ item.TipoNota == 1 ? "Cupom" : "Nota" }}
+                                </span>
+                            </div>
+
+                            <h2>
+                                COO: {{ item.COO }}
+                                <span ng-if="item.Situacao == 1">
+                                    <i class="ion-ios-clock-outline"></i>
+                                    Lançado
+                                </span>
+                                <span ng-if="item.Situacao == 2">
+                                    <i class="ion-ios-checkmark-outline"></i>
+                                    Processado
+                                </span>
+                                <span ng-if="item.Situacao == 3">
+                                    <i class="ion-ios-close-outline"></i>
+                                    Erro ao processar
+                                </span>
+                            </h2>
+                            <p>{{ item.Entidade.Usuario.Nome }}</p>
+                        </a>
+                    </div>
+
+                    <div class="paginacao">
+                        <ion-infinite-scroll on-infinite="vm.carregarCuponsAntigos()" distance="1%" ng-if="vm.PodePaginar" icon="ion-load-c"></ion-infinite-scroll>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

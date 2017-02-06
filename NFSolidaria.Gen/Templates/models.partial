@@ -1,0 +1,77 @@
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Common.Models;
+using Common.Domain;
+using <#namespaceDomainSource#>.Filters;
+using Common.Interfaces;
+
+namespace <#namespace#>.Domain
+{	
+	public partial class <#className#> 
+	{
+		public <#className#>()
+        {
+
+        }
+
+		<#propertysNav#>
+
+
+		public <#className#> Get(<#className#> model)
+        {
+            return this.rep.GetAll(DataAgregation(new <#className#>Filter
+            {
+                QueryOptimizerBehavior = model.QueryOptimizerBehavior
+
+            }))<#WhereSingle#>.SingleOrDefault();
+        }
+
+		public IQueryable<<#className#>> GetByFilters(<#className#>Filter filters, params Expression<Func<<#className#>, object>>[] includes)
+        {
+			var queryBase = this.rep.GetAllAsNoTracking(includes);
+			var queryFilter = queryBase;
+			return this.SimpleFilters(filters, queryBase);
+        }
+
+		public IEnumerable<DataItem> GetDataItem(<#className#>Filter filters)
+		{
+			var dataList = this.GetByFilters(filters)
+				.Select(_ => new DataItem
+				{
+					Id = _.<#KeyName#>.ToString(),
+				});
+
+			return dataList.ToList();
+		}
+
+		public Common.Models.Summary GetSummary(IQueryable<<#className#>> result)
+		{
+			return new Common.Models.Summary
+            {
+                Total = this.TotalCount
+            };
+		}
+
+		protected virtual Expression<Func<<#className#>, object>>[] DataAgregation(Filter filter)
+        {
+            return DataAgregation(new Expression<Func<<#className#>, object>>[] { }, filter);
+        }
+
+        protected virtual Expression<Func<<#className#>, object>>[] DataAgregation(Expression<Func<<#className#>, object>>[] includes, Filter filter)
+        {
+            return includes;
+        }
+
+		public override void Dispose()
+        {
+			if (this.rep != null)
+				this.rep.Dispose();
+        }
+
+		~<#className#>() {
+        }
+	}
+}

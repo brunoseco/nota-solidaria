@@ -1,0 +1,61 @@
+﻿using Common.API;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web;
+using <#namespaceDomainSource#>.Filters;
+using Common.Interfaces;
+using <#namespace#>.Dto;
+using <#namespace#>.Application;
+
+namespace <#namespace#>.Api.Controllers
+{
+    public class <#className#>Controller : ApiController
+    {
+        private HttpResult<<#className#>Dto> result;
+		private HelperHttpLog httpLog;
+		private <#className#>App app;
+
+        public <#className#>Controller()
+        {
+			this.httpLog = new HelperHttpLog();
+            this.httpLog.LogRequestIni();
+            this.result = new HttpResult<<#className#>Dto>();
+        }
+		
+		[ActionName("GetWarnings")]
+        public HttpResponseMessage GetWarnings([FromUri]<#className#>Filter filters)
+        {
+            var result = new HttpResult<<#className#>Dto>();
+
+            try
+            {
+                var token = HelperAuth.GetHeaderToken();
+                this.app = new <#className#>App(token);
+                this.app.GetWarnings(filters);
+                result.Warnings = this.app.ValidationHelper.GetDomainWarning();
+                this.app.Dispose();
+                result.Success();
+                return Request.CreateResponse(result.StatusCode, result);
+
+            }
+            catch (Exception ex)
+            {
+                result.ReturnCustomException(ex, filters);
+                return Request.CreateResponse(result.StatusCode, result);
+
+            }
+
+        }
+
+		protected override void Dispose(bool disposing)
+        {
+			if (this.app.IsNotNull()) this.app.Dispose();
+            this.httpLog.LogRequestEnd();
+            base.Dispose(disposing);
+        }
+    }
+}

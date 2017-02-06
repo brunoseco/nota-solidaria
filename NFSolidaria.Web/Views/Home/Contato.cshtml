@@ -1,0 +1,84 @@
+﻿@model ProjetoRankingNFE.Models.EmailSendViewModel
+
+@{
+    ViewBag.Title = "Contato";
+}
+
+<h2 class="text-center">Contato</h2>
+
+<hr />
+<div class="container row">
+    <div class="col-md-6">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <h4>Tire suas duvidas</h4><br />
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Nome, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Nome, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Nome, null, new { @class = "text-danger" }) <br />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" }) <br />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Mensagem, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(m => m.Mensagem, new { cols = 50, rows = 10, @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Mensagem, null, new { @class = "text-danger" }) <br />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-primary">Enviar  <i class="fa fa-send"></i></button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<br />
+
+<h2>Onde estamos</h2>
+
+<br />
+<div id="googleMap"></div>
+
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        var myCenter = new google.maps.LatLng(-23.500784, -47.463539, 17);
+
+        function initialize() {
+            var mapProp = {
+                center: myCenter,
+                zoom: 15,
+                scrollwheel: false,
+                draggable: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+
+            var marker = new google.maps.Marker({
+                position: myCenter,
+            });
+
+            marker.setMap(map);
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+}

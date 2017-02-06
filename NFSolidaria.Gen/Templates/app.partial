@@ -1,0 +1,49 @@
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Common.Domain.Interfaces;
+using Common.Infrastructure.Cache;
+using System.Collections.Generic;
+using Common.Models;
+using <#namespaceDomainSource#>.Filters;
+using Common.Interfaces;
+using <#namespace#>.Dto;
+using <#namespaceDomainSource#>.Domain;
+
+namespace <#namespace#>.Application
+{
+    public partial class <#className#>App 
+    {
+
+		public void Init(string token)
+        {
+			this.cache = ConfigContainer.Container().GetInstance<ICache>();
+            this.rep<#className#> = ConfigContainer.Container().GetInstance<IRepository<<#className#>>>();
+            this.<#className#> = new <#className#>(this.rep<#className#>, cache);
+            this.<#className#>.SetToken(token);
+		}
+
+		private IEnumerable<<#className#>Dto> MapperDomainToResult(<#className#>Filter filter, PaginateResult<<#className#>> dataList)
+        {
+            var result = filter.IsOnlySummary ? null : AutoMapper.Mapper.Map<IEnumerable<<#className#>>, IEnumerable<<#className#>DtoSpecializedResult>>(dataList.ResultPaginatedData);
+            return result;
+        }
+
+		private <#className#>Dto MapperDomainToDtoOnSave(<#className#> data, Common.Dto.DtoBase dto)
+        {
+            return AutoMapper.Mapper.Map<<#className#>, <#className#>Dto>(data);
+        }
+
+		private IEnumerable<<#className#>Dto> MapperDomainToDtoOnSave(IEnumerable<<#className#>> data, IEnumerable<Common.Dto.DtoBase> dtos)
+        {
+            return AutoMapper.Mapper.Map<IEnumerable<<#className#>>, IEnumerable<<#className#>Dto>>(data);
+        }
+				
+		private <#className#>Dto MapperDomainToDtoSpecialized(<#className#> data)
+        {
+            var result =  AutoMapper.Mapper.Map<<#className#>, <#className#>DtoSpecialized>(data);
+            return result;
+        }
+	}
+}

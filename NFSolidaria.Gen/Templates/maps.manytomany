@@ -1,0 +1,9 @@
+﻿this.HasMany(c => c.<#propertyNavigationLeft#>s).
+this.HasMany(c => c.<#propertyNavigationLeft#>s).
+                WithMany(p => p.<#propertyNavigationRigth#>s).
+                Map(m =>
+                {
+                    m.MapLeftKey("<#MapLeftKey#>");
+                    m.MapRightKey("<#MapRightKey#>");
+                    m.ToTable("<#TableHelper#>");
+                });

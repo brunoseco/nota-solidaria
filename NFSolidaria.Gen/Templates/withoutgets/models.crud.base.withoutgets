@@ -1,0 +1,113 @@
+﻿using System;
+using System.Linq;
+using Common.Domain;
+using Common.Domain.Interfaces;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using <#namespaceDomainSource#>.Filters;
+using Common.Models;
+using System.Threading.Tasks;
+using Cna.Erp.Domain.Helpers;
+
+namespace <#namespace#>.Domain
+{
+	public abstract class <#className#>Base : ConfigDomain<#module#>, <#IAudit#> IDisposable
+	{
+        internal IRepository<<#className#>> rep;
+		protected ICache cache;
+		public ValidationHelper ValidationHelper = new ValidationHelper();
+
+		public <#className#>Base() { }
+        public <#className#>Base(IRepository<<#className#>> rep, ICache cache):base()
+        {
+            this.rep = rep;
+            this.cache = cache;
+			this.Init();
+			base.Config(this.cache);
+        }
+
+<#property#>
+
+        protected virtual void ValidationReletedClasses(<#className#> model, CurrentUser user, <#className#> modelOld) { }
+        protected virtual void SetInitialValues(<#className#> model) { }
+        protected virtual void DeleteCollectionsOnSave(<#className#> model) { }
+
+		public virtual void Warnings(<#className#>Filter filters)
+        {
+            ValidationHelper.AddDomainWarning<<#className#>>("");
+        }
+		
+		protected virtual <#className#> UpdateDefault(<#className#> model,<#className#> modelOld)
+		{
+			var alvo = this.rep.GetAll()<#WhereSingle#>.SingleOrDefault();
+            model.TransferTo(alvo);
+            this.rep.Update(alvo, modelOld);
+			return model;
+		}
+
+		protected virtual bool Continue(<#className#> model, <#className#> modelOld)
+        {
+            return true;
+        }
+
+		protected <#className#> SaveDefault(<#className#> model, bool validation = true, bool questionToContinue = true)
+        {
+            var user = this.ValidateAuthSimple(this.token, this.cache);
+            var modelOld = this.rep.GetAll()<#WhereSingle#>.SingleOrDefault();
+            var isNew = modelOld.IsNull();
+
+			if (questionToContinue)
+            {
+                if (Continue(model, modelOld) == false)
+                    return model;
+            }
+
+			this.SetInitialValues(model);
+			<#callAudit#>
+            ValidationHelper.Validate<<#className#>>(model);
+            this.ValidationReletedClasses(model, user, modelOld);
+            if (validation) ValidationHelper.ValidateAll();
+
+            this.DeleteCollectionsOnSave(model);
+
+            if (isNew)
+                this.rep.Add(model);
+            else
+				this.UpdateDefault(model, modelOld);
+           
+		    this.ClearCache();
+            return model;
+        }
+
+		public virtual <#className#> SavePartial(<#className#> model)
+        {
+  		    model = SaveDefault(model, false);
+			this.rep.Commit();
+			return model;
+        }
+
+		public virtual void DeleteFromRepository(<#className#> alvo)
+        {
+            this.rep.Delete(alvo);
+			this.ClearCache();
+        }
+
+		public virtual void ClearCache()
+        {
+			if (this.cache.IsNotNull())
+            {
+                var tag = this.cache.Get("<#className#>") as List<string>;
+				if (tag.IsNull()) return;
+                foreach (var item in tag)
+                {
+                    this.cache.Remove(item);    
+                }
+                this.cache.Remove("<#className#>");
+            }
+            
+        }
+
+<#audit#>
+	
+	}
+}

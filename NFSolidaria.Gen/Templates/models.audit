@@ -1,0 +1,31 @@
+﻿		public void Audit(object userId)
+        {
+            Audit( userId,null);
+        }
+		public void Audit(object userId,IAudit auditClass)
+		{
+            var isNew = auditClass.IsNull();
+
+			if (isNew)
+			{
+				this.UserCreateId = <#propertCastInsert#>;
+				this.UserCreateDate = DateTime.Now;
+			}
+			else
+			{
+				this.UserCreateId = auditClass.GetUserCreateId();
+                this.UserCreateDate = auditClass.GetUserCreateDate();
+				this.UserAlterId = <#propertCastUpdate#>;
+				this.UserAlterDate = DateTime.Now;
+			}
+		}
+
+		public DateTime GetUserCreateDate()
+        {
+            return this.UserCreateDate;
+        }
+
+		public int GetUserCreateId()
+        {
+            return this.UserCreateId;
+        }

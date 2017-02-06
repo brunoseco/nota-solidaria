@@ -1,0 +1,61 @@
+
+<ion-view view-title="Notas">
+    <ion-content class="geral-nfs" cache-view="false">
+
+        <ion-refresher on-refresh="vm.carregarUsuarioEntidadeFavoritaNovas()" pulling-text="Atualizar" spinner="none"
+                       refreshing-icon="ion-load-c" pulling-icon="ion-load-c"></ion-refresher>
+
+        <div class="container">
+            <div class="bar bar-user item-input-inset">
+                <label class="item-input-wrapper">
+                    <i class="icon ion-ios-search placeholder-icon"></i>
+                    <input type="search" placeholder="Pesquisar por Entidade" ng-model="vm.NomePesquisa" ng-change="vm.carregarUsuarioEntidadeFavoritaNovas()" />
+                </label>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="conteudo list-nfs">
+                <div class="item item-text-wrap" style="border:0;">
+
+
+                    <ul class="item item-text-wrap" ng-if="vm.UsuarioEntidadeFavoritas.length > 0">
+                        <li class="item item-divider">
+                            Favoritas
+                        </li>
+                    </ul>
+
+                    <ul class="item item-text-wrap" ng-if="vm.UsuarioEntidadeFavoritas.length > 0">
+                        <li class="item item-button-right" ng-repeat="item in vm.UsuarioEntidadeFavoritas track by $index">
+                            <h2>{{ item.Entidade.Usuario.Nome }}</h2>
+                            <button class="button button-clear button-energized" ng-click="vm.RemoveUsuarioEntidadeFavorita(item.EntidadeId)">
+                                <i class="icon ion-ios-star"></i>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <ul class="item item-text-wrap" ng-if="vm.Entidades.length > 0">
+                        <li class="item item-divider">
+                            Entidades
+                        </li>
+                    </ul>
+                    <ul class="item item-text-wrap" ng-if="vm.Entidades.length > 0">
+                        <li class="item item-button-right" ng-repeat="item in vm.Entidades track by $index">
+                            <h2>{{ item.Usuario.Nome }}</h2>
+                            <button class="button button-clear button-dark" ng-click="vm.AdicionaUsuarioEntidadeFavorita(item.EntidadeId)">
+                                <i class="icon ion-ios-star-outline"></i>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="paginacao">
+                        <ion-infinite-scroll on-infinite="vm.carregarEntidadesAntigos()" distance="1%" ng-if="vm.PodePaginar" icon="ion-load-c"></ion-infinite-scroll>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </ion-content>
+
+</ion-view>

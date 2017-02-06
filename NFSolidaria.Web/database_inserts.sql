@@ -1,0 +1,9 @@
+﻿insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 1', 'Cupom Fiscal',100.00,'OCC 1', '1123456789','Situação',1,1);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 2', 'Cupom Fiscal',20.00,'OCC 2', '2123456789','Situação',1,2);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 3', 'Cupom Fiscal',35.00,'OCC 3', '3123456789','Situação',2,3);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 4', 'Cupom Fiscal',40.00,'OCC 4', '4123456789','Situação',2,4);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 5', 'Cupom Fiscal',30.50,'OCC 5', '5123456789','Situação',3,5);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 6', 'Cupom Fiscal',41.20,'OCC 6', '6123456789','Situação',3,5);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 6', 'Cupom Fiscal',141.20,'OCC 6', '6123456789','Situação',4,5);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 6', 'Cupom Fiscal',51.30,'OCC 6', '6123456789','Situação',5,5);
+insert into Nota (Chave_de_Acesso,Data_Compra,coo,Tipo_da_Nota,valor,ooc,CNPJ_Emissor,Situacao,Id_Entidade,Id_Usuario) values (1,getdate(),'COO 6', 'Cupom Fiscal',41.20,'OCC 6', '6123456789','Situação',5,5);

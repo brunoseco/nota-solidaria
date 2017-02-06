@@ -1,0 +1,36 @@
+<ion-modal-view class="modal-nfs">
+    <ion-header-bar>
+        <h1 class="title">Novo Cadastro</h1>
+        <button class="button button-clear button-primary icon-left ion-close-circled" ng-click="vm.closeModalSignUp()"></button>
+    </ion-header-bar>
+    <form name="frmSignUp">
+        <ion-content class="scroll-content ionic-scroll">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Nome</span>
+                <input type="text" placeholder="Nome" name="SignUpModel.Nome" ng-model="vm.SignUpModel.Nome" ng-required="true" ng-minlength="3" />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">E-mail</span>
+                <input type="email" placeholder="E-mail" name="SignUpModel.Email" ng-model="vm.SignUpModel.Email" ng-required="true" ng-minlength="3" />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Senha</span>
+                <input type="password" placeholder="Senha" name="SignUpModel.SenhaMD5" ng-model="vm.SignUpModel.SenhaMD5" ng-required="true" ng-minlength="6" />
+            </label>
+
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Confirme a senha</span>
+                <input type="password" placeholder="Confirme a senha" name="SignUpModel.SenhaMD52" ng-model="vm.SignUpModel.SenhaMD52" ng-required="true" ng-minlength="6" />
+            </label>
+        </ion-content>
+
+        <ion-footer-bar>
+            <button class="button button-block button-balanced" ng-click="vm.SignUp(vm.SignUpModel)" ng-disabled="frmSignUp.$invalid || vm.SignUpModel.SenhaMD52 != vm.SignUpModel.SenhaMD5">
+                Salvar Cadastro
+            </button>
+        </ion-footer-bar>
+
+    </form>
+</ion-modal-view>

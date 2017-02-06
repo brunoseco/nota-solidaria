@@ -1,0 +1,31 @@
+﻿using Cna.Erp.Domain.Cache;
+using Cna.Erp.Domain.Helpers;
+using Common.Domain;
+using Common.Domain.Interfaces;
+
+namespace <#namespace#>.Domain
+{
+    public abstract class ConfigDomain<#module#> : DomainBase
+    {
+		
+		private CurrentUser _user;
+
+		public void Config(Common.Domain.Interfaces.ICache cache)
+        {
+
+        }
+		
+		public CurrentUser ValidateAuth(string token, ICache cache)
+        {
+            if (_user.IsNull())
+                _user = HelperValidateAuth.ValidateAuth(token, cache);
+
+            return _user;
+        }
+		
+		public override void Dispose()
+        {
+        
+		}
+    }
+}
